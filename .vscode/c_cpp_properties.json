@@ -1,0 +1,17 @@
+{
+  "configurations": [
+    {
+      "name": "Win32",
+      "includePath": [
+        "${workspaceFolder}/src**",
+        "C:/msys64/mingw64/include" // Add this line for SFML include
+      ],
+      "defines": ["_DEBUG", "UNICODE", "_UNICODE"],
+      "compilerPath": "C:/msys64/mingw64/bin/g++.exe", // Change to mingw64
+      "cStandard": "c17",
+      "cppStandard": "gnu++17",
+      "intelliSenseMode": "windows-gcc-x64"
+    }
+  ],
+  "version": 4
+}
