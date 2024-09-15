@@ -26,8 +26,7 @@
         "trace": true,
         "traceResponse": true,
         "engineLogging": true
-      },
-      "preLaunchTask": "build"
+      }
     }
   ]
 }

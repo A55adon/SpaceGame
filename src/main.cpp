@@ -4,16 +4,20 @@
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Space Game");
-    sf::Clock clock;                                    // To keep track of time
-    const sf::Time frameTime = sf::seconds(1.f / 30.f); // 30 FPS
+    sf::Clock clock;
+    sf::Time timePerFrame = sf::seconds(1.f / 60.f); // 60 FPS
+    sf::Time accumulator = sf::Time::Zero;
 
-    Player::Data playerData = {{"res/Ships/PNGs/Nairan - Battlecruiser - Base.png"}, {0, 0}, {1, 0}};
+    // Initialize player data
+    Player::Data playerData = {"res/Ships/PNGs/Nairan - Battlecruiser - Base.png", {400, 300}, {0, 0}, window};
     Player player(playerData);
 
     while (window.isOpen())
     {
-        sf::Time elapsed = clock.restart(); // Get the time since last frame
+        sf::Time dt = clock.restart();
+        accumulator += dt;
 
+        // Process events
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -21,22 +25,23 @@ int main()
                 window.close();
         }
 
-        // Ensure we only update and draw if enough time has passed
-        if (elapsed >= frameTime)
+        // Update game logic with a fixed time step
+        while (accumulator >= timePerFrame)
         {
-            player.update(); // Update player position
+            accumulator -= timePerFrame;
 
-            window.clear(sf::Color::Black);
-
-            player.draw(window); // Draw player
-
-            window.display();
+            // Update player
+            player.update();
         }
-        else
-        {
-            // Sleep for the remaining time to maintain the desired frame rate
-            sf::sleep(frameTime - elapsed);
-        }
+
+        // Clear the window
+        window.clear(sf::Color::Black);
+
+        // Draw player
+        player.draw();
+
+        // Display the contents of the window
+        window.display();
     }
 
     return 0;

@@ -12,13 +12,14 @@ public:
         std::string imagePath;
         sf::Vector2f position;
         sf::Vector2f velocity;
+        sf::RenderWindow &window;
     };
 
     Player(Data pData);
     ~Player();
 
     void update();
-    void draw(sf::RenderWindow &window);
+    void draw();
 
 private:
     sf::Texture shipTexture;

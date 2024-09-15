@@ -19,4 +19,4 @@ g++ -o build\main build\main.o build\player.o ^
     -lgdi32 -lopengl32 -lwinmm -luser32 -lversion
 
 echo Build complete. Run build\main.exe to execute.
-pause
+timeout /t 5 

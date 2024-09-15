@@ -6,4 +6,4 @@ set PATH=C:\msys64\mingw64\bin;%PATH%
 :: Run the executable
 build\main.exe
 
-pause
+timeout /t 5 
