@@ -22,15 +22,13 @@ Player::Player(Data pData) : pData(pData)
 
 Player::~Player()
 {
-    // Destructor if needed
+    // TODO: Deconstructor if needed
 }
 
 void Player::update()
 {
-    // Reset velocity (stationary unless a key is pressed)
     pData.velocity = sf::Vector2f(0, 0);
 
-    // Handle player movement (independent of rotation)
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
         pData.velocity.x = -5.0f; // Move left
@@ -47,25 +45,15 @@ void Player::update()
     {
         pData.velocity.y = 5.0f; // Move down
     }
-
-    // Update player position based on velocity
     pData.position += pData.velocity;
 
-    // Update the position of the sprite
     shipSprite.setPosition(pData.position);
 
-    // Get mouse position relative to the window
     sf::Vector2i mousePos = sf::Mouse::getPosition(pData.window);
     sf::Vector2f mousePosF(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
-
-    // Calculate the direction vector between the player and the mouse
     sf::Vector2f direction = mousePosF - pData.position;
-
-    // Calculate the angle in radians
     float angle = std::atan2(direction.y, direction.x);
-
-    // Convert the angle to degrees and set the sprite rotation
-    shipSprite.setRotation(angle * 180 + 90 / 3.14159f);
+    shipSprite.setRotation((angle * 180 / 3.14159f) + 90);
 }
 
 void Player::draw()
