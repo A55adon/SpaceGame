@@ -11,7 +11,7 @@ int main()
     sf::Time accumulator = sf::Time::Zero;
 
     Background background("res/Background/Space Background(11).png");
-    Player::Data playerData = {"res/Ships/PNGs/Nairan - Battlecruiser - Base.png", {400, 300}, {0, 0}, window};
+    Player::Data playerData = {"res/Ships/PNGs/Nairan - Battlecruiser - Base.png", "res/Engine Effects/PNGs/Nairan - Battlecruiser - Engine.png", {400, 300}, {0, 0}, window};
     Player player(playerData);
 
     sf::View view(window.getDefaultView());
@@ -35,9 +35,7 @@ int main()
 #pragma region Update
         while (accumulator >= timePerFrame)
         {
-
             player.update();
-
             background.update(player.getPosition());
             accumulator -= timePerFrame;
         }
@@ -66,3 +64,8 @@ int main()
 
     return 0;
 }
+
+// specialtodos
+//  TODO: camera endpositon --> following
+// TODO: fix movementlagg
+// TODO: unstatic movements

@@ -2,9 +2,9 @@
 #include <iostream>
 #include <cmath>
 
-#pragma region Constructor/Destructor
+#pragma region Constructor
 
-Player::Player(Data &pData) : pData(pData)
+Player::Player(Data &pData) : pData(pData), currentFrame(0), animationSpeed(0.1f), engineVisible(false)
 {
     if (!shipTexture.loadFromFile(pData.imagePath))
     {
@@ -20,6 +20,28 @@ Player::Player(Data &pData) : pData(pData)
 
     // Initialize position
     shipSprite.setPosition(pData.position);
+
+    if (!engineTexture.loadFromFile("res/Engine Effects/PNGs/mainship_tilesheet.png"))
+    {
+        std::cerr << "Error loading tilesheet from mainship_tilesheet.png" << std::endl;
+    }
+
+    int frameWidth = 128;
+    int frameHeight = 128;
+    int numFrames = 8;
+
+    for (int i = 0; i < numFrames; ++i)
+    {
+        frames.push_back(sf::IntRect(i * frameWidth, 0, frameWidth, frameHeight));
+    }
+
+    engineSprite.setTexture(engineTexture);
+    engineSprite.setTextureRect(frames[currentFrame]);
+    engineSprite.setOrigin(frameWidth / 2.0f, frameHeight / 2.0f);
+
+    animationClock.restart(); // Start the clock for animation timing
+
+    orbitRadius = frameWidth * 0.05f; // Set the distance of the engine from the player based on engine size
 }
 
 Player::~Player()
@@ -82,6 +104,29 @@ void Player::update()
         float angle = std::atan2(direction.y, direction.x) * 180 / 3.14159f;
         shipSprite.setRotation(angle + 90);
     }
+
+    // Update engine visibility
+    engineVisible = pData.velocity != sf::Vector2f(0, 0);
+
+    // Update the engine sprite's position to orbit around the player
+    if (engineVisible)
+    {
+        // Calculate the offset for the engine sprite to orbit around the player
+        float angle = (shipSprite.getRotation() - 90) * 3.14159f / 180.0f; // Convert degrees to radians and adjust
+        float engineX = shipSprite.getPosition().x - orbitRadius * std::cos(angle);
+        float engineY = shipSprite.getPosition().y - orbitRadius * std::sin(angle);
+        engineSprite.setPosition(engineX, engineY);
+        engineSprite.setRotation(shipSprite.getRotation()); // Match the player's rotation
+
+        // Animation update
+        sf::Time dt = animationClock.getElapsedTime();
+        if (dt.asSeconds() >= animationSpeed)
+        {
+            currentFrame = (currentFrame + 1) % frames.size();
+            engineSprite.setTextureRect(frames[currentFrame]);
+            animationClock.restart(); // Restart the clock after updating frame
+        }
+    }
 }
 
 #pragma endregion
@@ -91,6 +136,10 @@ void Player::update()
 void Player::draw()
 {
     pData.window.draw(shipSprite);
+    if (engineVisible)
+    {
+        pData.window.draw(engineSprite); // Draw the animated engine sprite only if visible
+    }
 }
 
 #pragma endregion
