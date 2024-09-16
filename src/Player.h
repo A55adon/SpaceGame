@@ -7,6 +7,7 @@
 class Player
 {
 public:
+#pragma region Data Structure
     struct Data
     {
         std::string imagePath;
@@ -14,17 +15,25 @@ public:
         sf::Vector2f velocity;
         sf::RenderWindow &window;
     };
+#pragma endregion
 
-    Player(Data pData);
+#pragma region Constructor/Destructor
+    Player(Data &pData);
     ~Player();
+#pragma endregion
 
+#pragma region Methods
+    sf::Vector2f getPosition() const;
     void update();
     void draw();
+#pragma endregion
 
 private:
+#pragma region Variables
     sf::Texture shipTexture;
     sf::Sprite shipSprite;
     Data pData;
+#pragma endregion
 };
 
 #endif // PLAYER_H
