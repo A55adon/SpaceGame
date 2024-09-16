@@ -69,3 +69,4 @@ int main()
 //  TODO: camera endpositon --> following
 // TODO: fix movementlagg
 // TODO: unstatic movements
+// TODO: schaun ob felix sich einkriegt oder ich muss das so steuerung machen mal schaun
