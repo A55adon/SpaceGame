@@ -5,7 +5,9 @@
 
 #pragma region Constructor
 
-Player::Player(Data &pData) : pData(pData), currentFrame(0), animationSpeed(0.1f), engineVisible(false)
+Player::Player(Data &pData)
+    : pData(pData), currentFrame(0), animationSpeed(0.1f), engineVisible(false),
+      bulletData({&pData.window, "", pData.position, pData.velocity}) // Pass the pointer
 {
     if (!shipTexture.loadFromFile(pData.imagePath))
     {
@@ -42,7 +44,7 @@ Player::Player(Data &pData) : pData(pData), currentFrame(0), animationSpeed(0.1f
 
     orbitRadius = frameWidth * 0.05f;
 
-    bulletData.path = "res/Ships/PNGs/Nairan - Battlecruiser - Base.png";
+    bulletData.path = "res/Ships/PNGs/ship.png";
     bulletData.velocity = sf::Vector2f(0.5f, 0.0f);
 }
 
@@ -127,7 +129,7 @@ void Player::shoot()
 {
     bulletData.position = pData.position;
     Bullet bullet(bulletData);
-    bullet.draw(pData.window);
+    bullet.draw();
     bullets.push_back(bullet);
 }
 

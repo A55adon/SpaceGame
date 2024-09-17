@@ -8,7 +8,7 @@ class Bullet
 public:
     struct Data
     {
-        sf::Window *window;
+        sf::RenderWindow *window;
         std::string path;
         sf::Vector2f position;
         sf::Vector2f velocity;
@@ -20,7 +20,7 @@ public:
 
 #pragma region Methods
     void update();
-    void draw(sf::RenderWindow &window);
+    void draw();
 #pragma endregion
 
 #pragma region Variables

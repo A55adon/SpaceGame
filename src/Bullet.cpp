@@ -24,22 +24,15 @@ Bullet::Bullet(Data &bData) : bulletData(bData)
 #pragma endregion
 
 #pragma region Methods
-
+void Bullet::draw()
+{
+    bulletData.window->draw(bSprite);
+}
 void Bullet::update()
 {
     bulletData.position += bulletData.velocity;
 
     bSprite.setPosition(bulletData.position);
-}
-
-void Bullet::draw(sf::RenderWindow &window)
-{
-    window.draw(bSprite);
-
-    if (!bSprite.getTexture())
-    {
-        printf("test");
-    }
 }
 
 #pragma endregion

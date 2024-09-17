@@ -11,7 +11,7 @@ int main()
     sf::Time accumulator = sf::Time::Zero;
 
     Background background("res/Background/Space Background(11).png");
-    Player::Data playerData = {"res/Ships/PNGs/Nairan - Battlecruiser - Base.png", "res/Engine Effects/PNGs/Nairan - Battlecruiser - Engine.png", {400, 300}, {0, 0}, window};
+    Player::Data playerData = {"res/Ships/PNGs/ship.png", "res/Engine Effects/PNGs/Nairan - Battlecruiser - Engine.png", {400, 300}, {0, 0}, window};
     Player player(playerData);
 
     sf::View view(window.getDefaultView());
@@ -64,7 +64,7 @@ int main()
         player.draw();
         for (auto &bullet : player.bullets)
         {
-            bullet.draw(window);
+            bullet.draw();
         }
         window.display();
 #pragma endregion
