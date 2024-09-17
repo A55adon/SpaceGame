@@ -38,7 +38,7 @@ void Bullet::draw(sf::RenderWindow &window)
 
     if (!bSprite.getTexture())
     {
-        printf("shitting noise");
+        printf("test");
     }
 }
 
