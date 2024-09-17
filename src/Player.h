@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
+#include "Bullet.h"
 
 class Player
 {
@@ -12,14 +13,14 @@ public:
     struct Data
     {
         std::string imagePath;
-        std::string engineGif; // Unused in this example
+        std::string engineGif;
         sf::Vector2f position;
         sf::Vector2f velocity;
         sf::RenderWindow &window;
     };
 #pragma endregion
 
-#pragma region Constructor/Destructor
+#pragma region Constructor
     Player(Data &pData);
     ~Player();
 #pragma endregion
@@ -28,6 +29,7 @@ public:
     sf::Vector2f getPosition() const;
     void update();
     void draw();
+    void shoot();
 #pragma endregion
 
 private:
@@ -44,6 +46,10 @@ private:
     sf::Vector2f engineOffset;
     float orbitRadius;
     bool engineVisible;
+    Bullet::Data bulletData;
+
+public:
+    std::vector<Bullet> bullets;
 #pragma endregion
 };
 

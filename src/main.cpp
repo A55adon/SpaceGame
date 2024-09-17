@@ -38,6 +38,10 @@ int main()
             player.update();
             background.update(player.getPosition());
             accumulator -= timePerFrame;
+            for (auto &bullet : player.bullets)
+            {
+                bullet.update();
+            }
         }
 
         sf::Vector2f playerPosition = player.getPosition();
@@ -58,6 +62,10 @@ int main()
         window.clear(sf::Color::Black);
         background.draw(window);
         player.draw();
+        for (auto &bullet : player.bullets)
+        {
+            bullet.draw(window);
+        }
         window.display();
 #pragma endregion
     }
@@ -65,8 +73,7 @@ int main()
     return 0;
 }
 
-// specialtodos
 //  TODO: camera endpositon --> following
 // TODO: fix movementlagg
 // TODO: unstatic movements
-// TODO: schaun ob felix sich einkriegt oder ich muss das so steuerung machen mal schaun
+// TODO: normalize fast-movement vectors

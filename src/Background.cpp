@@ -11,12 +11,9 @@ Background::Background(std::string path)
         std::cerr << "Loading background failed" << std::endl;
         return;
     }
+    x = 0;
+    y = 0;
 
-    // Initial positions
-    x = 0; // Set initial x position
-    y = 0; // Set initial y position
-
-    // Initialize sprites
     bgSprite.setTexture(bgTexture);
     bgSprite.setPosition(x, y);
     bgSprite.setScale(0.5f, 0.5f);
@@ -60,11 +57,9 @@ Background::Background(std::string path)
 
 void Background::update(sf::Vector2f playerPosition)
 {
-    // Calculate the shift needed to maintain the infinite effect
     float shiftX = std::floor((playerPosition.x - x) / 600) * 600;
     float shiftY = std::floor((playerPosition.y - y) / 600) * 600;
 
-    // Update sprite positions
     bgSprite.setPosition(x + shiftX, y + shiftY);
     bgSpriteN.setPosition(x + shiftX, y + 600 + shiftY);
     bgSpriteNR.setPosition(x + 600 + shiftX, y + 600 + shiftY);
@@ -78,7 +73,6 @@ void Background::update(sf::Vector2f playerPosition)
 
 void Background::draw(sf::RenderWindow &window)
 {
-    // Draw all sprites
     window.draw(bgSprite);
     window.draw(bgSpriteN);
     window.draw(bgSpriteNR);
