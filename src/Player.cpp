@@ -141,7 +141,6 @@ void Player::shoot()
     {
         bulletData.position = pData.position;
         Bullet bullet(bulletData);
-        bullet.draw();
         bullets.push_back(bullet);
         shootable = false;
     }
@@ -151,7 +150,7 @@ void Player::shoot()
 
 #pragma region Draw
 
-void Player::draw()
+void Player::draw() const
 {
     pData.window.draw(shipSprite);
     if (engineVisible)

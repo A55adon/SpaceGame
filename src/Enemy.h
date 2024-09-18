@@ -2,8 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <string>
+#include "Bullet.h"
 
-class Bullet
+class Enemy
 {
 public:
     struct Data
@@ -12,10 +13,10 @@ public:
         std::string path;
         sf::Vector2f position;
         sf::Vector2f velocity;
+        std::vector<Bullet> bullets;
     };
-
 #pragma region Constructor
-    Bullet(Data &bData);
+    Enemy(Data &bData);
 #pragma endregion
 
 #pragma region Methods
@@ -24,9 +25,9 @@ public:
 #pragma endregion
 
 #pragma region Variables
-    sf::Texture bTexture;
-    sf::Sprite bSprite;
+    sf::Texture eTexture;
+    sf::Sprite eSprite;
 
-    Data bulletData;
+    Data enemyData;
 #pragma endregion
 };

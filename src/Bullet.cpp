@@ -24,7 +24,7 @@ Bullet::Bullet(Data &bData) : bulletData(bData)
 #pragma endregion
 
 #pragma region Methods
-void Bullet::draw()
+void Bullet::draw() const
 {
     bulletData.window->draw(bSprite);
 }

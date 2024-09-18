@@ -28,7 +28,7 @@ public:
 #pragma region Methods
     sf::Vector2f getPosition() const;
     void update();
-    void draw();
+    void draw() const;
     void shoot();
 #pragma endregion
 
