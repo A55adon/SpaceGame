@@ -123,14 +123,28 @@ void Player::update()
             animationClock.restart();
         }
     }
+
+    if (!shootable && bulletcounter > 4)
+    {
+        shootable = true;
+        bulletcounter = 0;
+    }
+    else
+    {
+        bulletcounter++;
+    }
 }
 
 void Player::shoot()
 {
-    bulletData.position = pData.position;
-    Bullet bullet(bulletData);
-    bullet.draw();
-    bullets.push_back(bullet);
+    if (shootable)
+    {
+        bulletData.position = pData.position;
+        Bullet bullet(bulletData);
+        bullet.draw();
+        bullets.push_back(bullet);
+        shootable = false;
+    }
 }
 
 #pragma endregion

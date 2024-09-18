@@ -21,7 +21,7 @@ public:
 #pragma endregion
 
 #pragma region Constructor
-    Player(Data &pData);
+    Player(Data &data);
     ~Player();
 #pragma endregion
 
@@ -42,14 +42,16 @@ private:
     int currentFrame;
     float animationSpeed;
     sf::Clock animationClock;
-    Data pData;
     sf::Vector2f engineOffset;
     float orbitRadius;
     bool engineVisible;
     Bullet::Data bulletData;
+    bool shootable = true;
+    int bulletcounter = 0;
 
 public:
     std::vector<Bullet> bullets;
+    Data pData;
 #pragma endregion
 };
 
