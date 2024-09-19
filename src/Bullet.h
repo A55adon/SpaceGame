@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <string>
+#include <memory>
 
 class Bullet
 {
@@ -9,9 +10,10 @@ public:
     struct Data
     {
         sf::RenderWindow *window;
-        std::string path;
+        std::shared_ptr<sf::Texture> texture; // Use shared_ptr
         sf::Vector2f position;
         sf::Vector2f velocity;
+        float angle;
     };
 
 #pragma region Constructor
@@ -20,11 +22,11 @@ public:
 
 #pragma region Methods
     void update();
-    void draw() const;
+    void draw(sf::RenderWindow &window) const;
 #pragma endregion
 
 #pragma region Variables
-    sf::Texture bTexture;
+    std::shared_ptr<sf::Texture> bTexture; // Use shared_ptr
     sf::Sprite bSprite;
 
     Data bulletData;

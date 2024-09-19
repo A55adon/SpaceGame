@@ -3,15 +3,15 @@
 
 #pragma region Constructor
 
-Bullet::Bullet(Data &bData) : bulletData(bData)
+Bullet::Bullet(Data &bData) : bulletData(bData), bTexture(bData.texture) // Initialize shared_ptr
 {
-    if (!bTexture.loadFromFile(bData.path))
+    if (!bTexture)
     {
-        std::cerr << "Error loading bullet texture from " << bData.path << std::endl;
+        std::cerr << "Texture pointer is null!" << std::endl;
         return;
     }
 
-    bSprite.setTexture(bTexture);
+    bSprite.setTexture(*bTexture);
 
     bSprite.setPosition(bulletData.position);
     if (!bSprite.getTexture())
@@ -24,15 +24,18 @@ Bullet::Bullet(Data &bData) : bulletData(bData)
 #pragma endregion
 
 #pragma region Methods
-void Bullet::draw() const
+
+void Bullet::draw(sf::RenderWindow &win) const
 {
-    bulletData.window->draw(bSprite);
+    win.draw(bSprite);
 }
+
 void Bullet::update()
 {
-    bulletData.position += bulletData.velocity;
+    bulletData.position += bulletData.velocity; // Move the bullet in the direction of its velocity
 
     bSprite.setPosition(bulletData.position);
+    bSprite.setRotation(bulletData.angle * 180.0f / 3.14159f + 90); // Set rotation in degrees
 }
 
 #pragma endregion

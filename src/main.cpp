@@ -3,7 +3,7 @@
 #include "Background.h"
 #include "Enemy.h"
 #include <iostream>
-#include <algorithm> // For std::remove_if
+#include <memory> // For std::make_shared
 
 #pragma region Variables
 
@@ -20,6 +20,10 @@ Enemy enemy(enemyData);
 
 void enemyHandler()
 {
+    if (enemys.size() < 8)
+    {
+        // TODO: add enemy spawn logic
+    }
     for (size_t i = 0; i < enemys.size();)
     {
         Enemy &enemy = enemys[i];
@@ -126,9 +130,9 @@ int main()
             player.update();
             background.update(player.getPosition());
             accumulator -= timePerFrame;
-            for (auto &bullet : player.bullets)
+            for (auto &enemy : enemys)
             {
-                bullet.update();
+                enemy.update(player.pData.position);
             }
         }
 
@@ -152,21 +156,15 @@ int main()
         window.clear(sf::Color::Black);
         background.draw(window);
         player.draw();
-
         if (enemys.empty())
         {
             std::cout << "No enemies to render." << std::endl;
         }
-
-        for (const auto &enemy : enemys)
+        for (auto &enemy : enemys)
         {
-            enemy.draw();
+            enemy.update(player.pData.position);
         }
-
-        for (const auto &bullet : player.bullets)
-        {
-            bullet.draw();
-        }
+        std::cout << enemys[1].enemyData.position.x << " and " << enemys[1].enemyData.position.y << std::endl;
         window.display();
 #pragma endregion
     }

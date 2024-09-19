@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
+#include <memory>
 #include "Bullet.h"
 
 class Player
@@ -45,13 +46,21 @@ private:
     sf::Vector2f engineOffset;
     float orbitRadius;
     bool engineVisible;
-    Bullet::Data bulletData;
-    bool shootable = true;
-    int bulletcounter = 0;
+    std::shared_ptr<sf::Texture> bulletTexture; // Use shared_ptr
+    bool lastShotLeft = true;                   // Track the last shot direction
+    float borbitRadius = 50.0f;                 // Distance from the player where bullets will spawn
+    int shootCounter = 0;
+    int shootable = 0;
 
 public:
-    std::vector<Bullet> bullets;
+    std::vector<Bullet>
+        bullets;
     Data pData;
+
+    Bullet::Data bData;
+
+    Bullet bull;
+
 #pragma endregion
 };
 
