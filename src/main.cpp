@@ -109,36 +109,28 @@ int main()
     enemys.push_back(enemy);
 
 #pragma endregion
-
+#pragma region main loop
     while (window.isOpen())
     {
-#pragma region EventHandling
         sf::Time dt = clock.restart();
         accumulator += dt;
 
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-#pragma endregion
-
-#pragma region Update
         while (accumulator >= timePerFrame)
         {
             player.update();
             background.update(player.getPosition());
             accumulator -= timePerFrame;
+
+            // Update all enemies with the player's position
             for (auto &enemy : enemys)
             {
                 enemy.update(player.pData.position);
             }
         }
 
+        // Handle view following and bullet handling
         sf::Vector2f playerPosition = player.getPosition();
         sf::Vector2f viewCenter = view.getCenter();
-
         sf::FloatRect deadZone(viewCenter.x - 100.f, viewCenter.y - 100.f, 200.f, 200.f);
         if (!deadZone.contains(playerPosition))
         {
@@ -150,24 +142,17 @@ int main()
         bulletHandler();
         enemyHandler();
         window.setView(view);
-#pragma endregion
 
-#pragma region Rendering
+        // Render everything
         window.clear(sf::Color::Black);
         background.draw(window);
         player.draw();
-        if (enemys.empty())
-        {
-            std::cout << "No enemies to render." << std::endl;
-        }
         for (auto &enemy : enemys)
         {
-            enemy.update(player.pData.position);
+            enemy.draw(); // Ensure you call draw here for each enemy
         }
-        std::cout << enemys[1].enemyData.position.x << " and " << enemys[1].enemyData.position.y << std::endl;
         window.display();
-#pragma endregion
     }
-
+#pragma endregion
     return 0;
 }
