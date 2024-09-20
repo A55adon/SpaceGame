@@ -3,26 +3,18 @@
 #include "Background.h"
 #include "Enemy.h"
 #include <iostream>
-#include <memory> // For std::make_shared
+#include <memory>
+#include <cmath>
 
-#pragma region Variables
-
-sf::RenderWindow window(sf::VideoMode(800, 600), "Space Game");
+sf::RenderWindow window(sf::VideoMode(1200, 1000), "Space Game");
 Player::Data playerData = {"res/Ships/PNGs/ship.png", "res/Engine Effects/PNGs/Nairan - Battlecruiser - Engine.png", {400, 300}, {0, 0}, window};
 Player player(playerData);
 std::vector<Enemy> enemys;
-Enemy::Data enemyData = {&window, "res/Ships/PNGs/enemy.png", {10, 10}, {10, 10}, {}};
-Enemy enemy(enemyData);
-
-#pragma endregion
-
-#pragma region Bullet/Enemy logic
 
 void enemyHandler()
 {
     if (enemys.size() < 8)
     {
-        // TODO: add enemy spawn logic
     }
     for (size_t i = 0; i < enemys.size();)
     {
@@ -32,25 +24,16 @@ void enemyHandler()
         for (size_t j = 0; j < player.bullets.size();)
         {
             Bullet &bullet = player.bullets[j];
-
-            // Assuming you have methods or members to get sprite bounds
             sf::FloatRect enemyBounds = enemy.eSprite.getGlobalBounds();
             sf::FloatRect bulletBounds = bullet.bSprite.getGlobalBounds();
 
-            // Check for intersection
             if (enemyBounds.intersects(bulletBounds))
             {
-                // Debugging output
                 std::cout << "Bullet position: " << bullet.bSprite.getPosition().x << ", " << bullet.bSprite.getPosition().y << std::endl;
                 std::cout << "Enemy position: " << enemy.eSprite.getPosition().x << ", " << enemy.eSprite.getPosition().y << std::endl;
 
-                // Remove the bullet
                 player.bullets.erase(player.bullets.begin() + j);
-
-                // Set flag for enemy removal
                 enemyRemoved = true;
-
-                // Break out of the bullet loop
                 break;
             }
             else
@@ -62,7 +45,6 @@ void enemyHandler()
         if (enemyRemoved)
         {
             std::cout << "Removing enemy at index: " << i << std::endl;
-            // Remove the enemy if it was marked for removal
             enemys.erase(enemys.begin() + i);
         }
         else
@@ -72,6 +54,26 @@ void enemyHandler()
     }
 }
 
+void enemySpawner()
+{
+    if (enemys.size() < 80)
+    {
+        sf::Vector2f playerPosition = player.getPosition();
+        float angle = static_cast<float>(rand()) / RAND_MAX * 2 * 3.14159f;
+        float distance = 800.0f + static_cast<float>(rand()) / RAND_MAX * 700.0f;
+        sf::Vector2f spawnPosition = playerPosition + sf::Vector2f(std::cos(angle) * distance, std::sin(angle) * distance);
+
+        std::shared_ptr<sf::Texture> enemyTexture = std::make_shared<sf::Texture>();
+        if (!enemyTexture->loadFromFile("res/Ships/PNGs/enemy2.png"))
+        {
+            std::cerr << "Failed to load enemy texture!" << std::endl;
+            return;
+        }
+        Enemy::Data enemyData = {&window, enemyTexture, spawnPosition, {static_cast<float>(rand() % 10) - 5, static_cast<float>(rand() % 10) - 5}, {}};
+
+        enemys.push_back(Enemy(enemyData));
+    }
+}
 void bulletHandler()
 {
     auto it = std::remove_if(player.bullets.begin(), player.bullets.end(), [&](const Bullet &bullet)
@@ -85,20 +87,21 @@ void bulletHandler()
         return (bulletX > playerX + 1000 ||
                 bulletX < playerX - 1000 ||
                 bulletY > playerY + 1000 ||
-                bulletY < playerY - 1000 ||
-                player.bullets.size() > 200); });
+                bulletY < playerY - 1000); });
 
     if (it != player.bullets.end())
     {
         player.bullets.erase(it, player.bullets.end());
     }
-}
 
-#pragma endregion
+    if (player.bullets.size() > 200)
+    {
+        player.bullets.erase(player.bullets.begin(), player.bullets.begin() + (player.bullets.size() - 200));
+    }
+}
 
 int main()
 {
-#pragma region Initialization
     sf::Clock clock;
     sf::Time timePerFrame = sf::seconds(1.f / 60.f);
     sf::Time accumulator = sf::Time::Zero;
@@ -106,29 +109,31 @@ int main()
     Background background("res/Background/Space Background(11).png");
     sf::View view(window.getDefaultView());
     view.setCenter(player.getPosition());
-    enemys.push_back(enemy);
 
-#pragma endregion
-#pragma region main loop
     while (window.isOpen())
     {
         sf::Time dt = clock.restart();
         accumulator += dt;
 
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
         while (accumulator >= timePerFrame)
         {
             player.update();
             background.update(player.getPosition());
             accumulator -= timePerFrame;
 
-            // Update all enemies with the player's position
             for (auto &enemy : enemys)
             {
                 enemy.update(player.pData.position);
             }
+            enemySpawner();
         }
 
-        // Handle view following and bullet handling
         sf::Vector2f playerPosition = player.getPosition();
         sf::Vector2f viewCenter = view.getCenter();
         sf::FloatRect deadZone(viewCenter.x - 100.f, viewCenter.y - 100.f, 200.f, 200.f);
@@ -143,16 +148,14 @@ int main()
         enemyHandler();
         window.setView(view);
 
-        // Render everything
         window.clear(sf::Color::Black);
         background.draw(window);
         player.draw();
         for (auto &enemy : enemys)
         {
-            enemy.draw(); // Ensure you call draw here for each enemy
+            enemy.draw();
         }
         window.display();
     }
-#pragma endregion
     return 0;
 }

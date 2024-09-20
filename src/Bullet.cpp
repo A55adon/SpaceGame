@@ -3,7 +3,7 @@
 
 #pragma region Constructor
 
-Bullet::Bullet(Data &bData) : bulletData(bData), bTexture(bData.texture) // Initialize shared_ptr
+Bullet::Bullet(Data &bData) : bulletData(bData), bTexture(bData.texture), currentFrame(0), animationSpeed(0.1f) // Initialize shared_ptr
 {
     if (!bTexture)
     {
@@ -13,12 +13,18 @@ Bullet::Bullet(Data &bData) : bulletData(bData), bTexture(bData.texture) // Init
 
     bSprite.setTexture(*bTexture);
 
-    bSprite.setPosition(bulletData.position);
-    if (!bSprite.getTexture())
+    int frameWidth = 9;
+    int frameHeight = 9;
+    int numFrames = 5;
+    for (int i = 0; i < numFrames; ++i)
     {
-        std::cerr << "Bullet sprite does not have a texture applied." << std::endl;
+        frames.push_back(sf::IntRect(i * frameWidth, 0, frameWidth, frameHeight));
     }
-    bSprite.setScale(0.5, 0.5);
+
+    bSprite.setTextureRect(frames[currentFrame]);
+    bSprite.setOrigin(frameWidth / 2.0f, frameHeight / 2.0f);
+    bSprite.setScale(4, 4);
+    animationClock.restart();
 }
 
 #pragma endregion
@@ -32,10 +38,20 @@ void Bullet::draw(sf::RenderWindow &win) const
 
 void Bullet::update()
 {
-    bulletData.position += bulletData.velocity; // Move the bullet in the direction of its velocity
-
+    bulletData.position += bulletData.velocity;
     bSprite.setPosition(bulletData.position);
-    bSprite.setRotation(bulletData.angle * 180.0f / 3.14159f + 90); // Set rotation in degrees
+    bSprite.setRotation(bulletData.angle * 180.0f / 3.14159f + 90);
+
+    sf::Time dt = animationClock.getElapsedTime();
+    if (!frames.empty())
+    {
+        if (dt.asSeconds() >= animationSpeed)
+        {
+            currentFrame = (currentFrame + 1) % frames.size();
+            bSprite.setTextureRect(frames[currentFrame]);
+            animationClock.restart();
+        }
+    }
 }
 
 #pragma endregion

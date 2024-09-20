@@ -10,7 +10,7 @@ public:
     struct Data
     {
         sf::RenderWindow *window;
-        std::shared_ptr<sf::Texture> texture; // Use shared_ptr
+        std::shared_ptr<sf::Texture> texture;
         sf::Vector2f position;
         sf::Vector2f velocity;
         float angle;
@@ -26,9 +26,14 @@ public:
 #pragma endregion
 
 #pragma region Variables
-    std::shared_ptr<sf::Texture> bTexture; // Use shared_ptr
+    std::shared_ptr<sf::Texture> bTexture;
     sf::Sprite bSprite;
 
     Data bulletData;
+
+    std::vector<sf::IntRect> frames;
+    int currentFrame;
+    float animationSpeed;
+    sf::Clock animationClock;
 #pragma endregion
 };

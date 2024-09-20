@@ -41,9 +41,7 @@ Player::Player(Data &pData)
     animationClock.restart();
 
     orbitRadius = frameWidth * 0.05f;
-
-    // Initialize shared_ptr texture and bulletData
-    bulletTexture->loadFromFile("res/Ships/PNGs/ship.png"); // Set a default texture for bullets
+    bulletTexture->loadFromFile("res/Weapon Effects - Projectiles/PNGs/enemy-bullets.png");
     bData.texture = bulletTexture;
 }
 
@@ -142,33 +140,25 @@ void Player::update()
 
 void Player::shoot()
 {
-    // Shoot every 5 or 10 frames based on the shootable counter
-    if (shootable == 5 || shootable == 10)
+    if (shootable == 10)
     {
-        // Calculate the bullet's spawn angle relative to the player's current rotation
-        float offsetAngle = lastShotLeft ? -30.0f : 30.0f;         // Angle offset in degrees
-        float shootAngle = shipSprite.getRotation() + offsetAngle; // Add offset to the ship's rotation
-        float angleInRadians = shootAngle * 3.14159f / 180.0f;     // Convert to radians
+        float offsetAngle = lastShotLeft ? -30.0f : 30.0f;
+        float shootAngle = shipSprite.getRotation() + offsetAngle;
+        float angleInRadians = shootAngle * 3.14159f / 180.0f;
 
-        // Calculate the bullet's spawn position based on the orbit radius and angle
         sf::Vector2f spawnPosition = pData.position + sf::Vector2f(orbitRadius * std::cos(angleInRadians), orbitRadius * std::sin(angleInRadians));
 
-        // Bullet data setup
-        bData.angle = (shipSprite.getRotation() - 90) * 3.14159f / 180.0f; // Convert ship's rotation to radians for bullet direction
+        bData.angle = (shipSprite.getRotation() - 90) * 3.14159f / 180.0f;
         bData.position = spawnPosition;
-
-        // Set bullet velocity based on angle
-        float bulletSpeed = 10.0f; // Bullet speed
+        float bulletSpeed = 4.0f;
         bData.velocity = sf::Vector2f(std::cos(bData.angle) * bulletSpeed,
                                       std::sin(bData.angle) * bulletSpeed);
 
         Bullet bullet(bData);
         bullets.push_back(bullet);
 
-        // Alternate the last shot direction
         lastShotLeft = !lastShotLeft;
 
-        // Reset shootable counter
         shootable = 0;
     }
 }

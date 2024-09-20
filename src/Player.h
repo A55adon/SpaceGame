@@ -46,9 +46,9 @@ private:
     sf::Vector2f engineOffset;
     float orbitRadius;
     bool engineVisible;
-    std::shared_ptr<sf::Texture> bulletTexture; // Use shared_ptr
-    bool lastShotLeft = true;                   // Track the last shot direction
-    float borbitRadius = 50.0f;                 // Distance from the player where bullets will spawn
+    std::shared_ptr<sf::Texture> bulletTexture;
+    bool lastShotLeft = true;
+    float borbitRadius = 50.0f;
     int shootCounter = 0;
     int shootable = 0;
 
