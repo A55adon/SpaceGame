@@ -9,4 +9,4 @@ g++ -c -o build/enemy.o src/enemy.cpp -D SFML_STATIC
 g++ -o build\main build\main.o build\player.o build\background.o build\bullet.o build\enemy.o ^
     -LC:\msys64\mingw64\lib -static -lsfml-graphics-s -lsfml-window-s -lsfml-system-s ^
     -lgdi32 -lopengl32 -lwinmm -luser32 -lversion
-timeout /t 9 
+timeout /t 3600
