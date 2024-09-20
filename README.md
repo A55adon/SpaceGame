@@ -4,15 +4,11 @@ A simple space shooter
 
 todo:
 
-- smoother movement
-- cammera follow til endposition
-- no crashing on close
-- ui
+- fix background
+- better background rendering
 - explode animations
-- propper bullets
-- enemyspawning
+- ui
 - different enemys
 - a menu
-- HP
-- better background rendering
+- smoother movement
 - paralaxing?

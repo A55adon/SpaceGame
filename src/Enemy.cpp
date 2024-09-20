@@ -28,7 +28,7 @@ void Enemy::update(const sf::Vector2f &playerPosition)
         directionToPlayer = {1.f, 0.f};
     }
 
-    float speed = 1.1f;
+    float speed = 0.5f;
 
     enemyData.position += directionToPlayer * speed;
 

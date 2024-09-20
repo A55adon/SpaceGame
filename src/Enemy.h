@@ -15,6 +15,7 @@ public:
         sf::Vector2f position;
         sf::Vector2f velocity;
         std::vector<Bullet> bullets;
+        int hp;
     };
 
 #pragma region Constructor

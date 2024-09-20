@@ -59,11 +59,11 @@ void Player::update()
     sf::Vector2i mousePos = sf::Mouse::getPosition(pData.window);
     sf::Vector2f mousePosWorld = pData.window.mapPixelToCoords(mousePos);
 
-    float speed = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ? 7.0f : 2.0f;
+    float speed = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ? 3.5f : 1.0f;
 
     pData.velocity = sf::Vector2f(0, 0);
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
     {
         shoot();
     }
@@ -147,10 +147,10 @@ void Player::shoot()
         float angleInRadians = shootAngle * 3.14159f / 180.0f;
 
         sf::Vector2f spawnPosition = pData.position + sf::Vector2f(orbitRadius * std::cos(angleInRadians), orbitRadius * std::sin(angleInRadians));
-
+        bData.dmg = 8;
         bData.angle = (shipSprite.getRotation() - 90) * 3.14159f / 180.0f;
         bData.position = spawnPosition;
-        float bulletSpeed = 4.0f;
+        float bulletSpeed = 2.0f;
         bData.velocity = sf::Vector2f(std::cos(bData.angle) * bulletSpeed,
                                       std::sin(bData.angle) * bulletSpeed);
 

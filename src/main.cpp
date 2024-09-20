@@ -10,12 +10,10 @@ sf::RenderWindow window(sf::VideoMode(1200, 1000), "Space Game");
 Player::Data playerData = {"res/Ships/PNGs/ship.png", "res/Engine Effects/PNGs/Nairan - Battlecruiser - Engine.png", {400, 300}, {0, 0}, window};
 Player player(playerData);
 std::vector<Enemy> enemys;
+sf::Time dt;
 
 void enemyHandler()
 {
-    if (enemys.size() < 8)
-    {
-    }
     for (size_t i = 0; i < enemys.size();)
     {
         Enemy &enemy = enemys[i];
@@ -29,12 +27,17 @@ void enemyHandler()
 
             if (enemyBounds.intersects(bulletBounds))
             {
-                std::cout << "Bullet position: " << bullet.bSprite.getPosition().x << ", " << bullet.bSprite.getPosition().y << std::endl;
-                std::cout << "Enemy position: " << enemy.eSprite.getPosition().x << ", " << enemy.eSprite.getPosition().y << std::endl;
+                enemy.enemyData.hp -= bullet.bulletData.dmg;
 
                 player.bullets.erase(player.bullets.begin() + j);
-                enemyRemoved = true;
-                break;
+
+                if (enemy.enemyData.hp <= 0)
+                {
+                    std::cout << "Enemy destroyed at index: " << i << std::endl;
+                    enemys.erase(enemys.begin() + i);
+                    enemyRemoved = true;
+                    break;
+                }
             }
             else
             {
@@ -42,18 +45,12 @@ void enemyHandler()
             }
         }
 
-        if (enemyRemoved)
-        {
-            std::cout << "Removing enemy at index: " << i << std::endl;
-            enemys.erase(enemys.begin() + i);
-        }
-        else
+        if (!enemyRemoved)
         {
             ++i;
         }
     }
 }
-
 void enemySpawner()
 {
     if (enemys.size() < 80)
@@ -69,7 +66,7 @@ void enemySpawner()
             std::cerr << "Failed to load enemy texture!" << std::endl;
             return;
         }
-        Enemy::Data enemyData = {&window, enemyTexture, spawnPosition, {static_cast<float>(rand() % 10) - 5, static_cast<float>(rand() % 10) - 5}, {}};
+        Enemy::Data enemyData = {&window, enemyTexture, spawnPosition, {static_cast<float>(rand() % 10) - 5, static_cast<float>(rand() % 10) - 5}, {}, 10};
 
         enemys.push_back(Enemy(enemyData));
     }
@@ -103,7 +100,7 @@ void bulletHandler()
 int main()
 {
     sf::Clock clock;
-    sf::Time timePerFrame = sf::seconds(1.f / 60.f);
+    sf::Time timePerFrame = sf::seconds(1.f / 120.f);
     sf::Time accumulator = sf::Time::Zero;
 
     Background background("res/Background/Space Background(11).png");
@@ -112,7 +109,7 @@ int main()
 
     while (window.isOpen())
     {
-        sf::Time dt = clock.restart();
+        dt = clock.restart();
         accumulator += dt;
 
         sf::Event event;
@@ -121,6 +118,7 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+
         while (accumulator >= timePerFrame)
         {
             player.update();
@@ -136,11 +134,17 @@ int main()
 
         sf::Vector2f playerPosition = player.getPosition();
         sf::Vector2f viewCenter = view.getCenter();
-        sf::FloatRect deadZone(viewCenter.x - 100.f, viewCenter.y - 100.f, 200.f, 200.f);
-        if (!deadZone.contains(playerPosition))
+
+        sf::Vector2f distance = player.pData.position - viewCenter;
+        float distanceLength = std::sqrt(distance.x * distance.x + distance.y * distance.y);
+
+        float speedFactor = 1.2f;
+        float followSpeed = distanceLength * speedFactor;
+
+        if (distanceLength > 1.0f)
         {
-            float followSpeed = 0.05f;
-            viewCenter += (playerPosition - viewCenter) * followSpeed;
+            sf::Vector2f direction = distance / distanceLength;
+            viewCenter += direction * followSpeed * dt.asSeconds();
             view.setCenter(viewCenter);
         }
 

@@ -14,6 +14,7 @@ public:
         sf::Vector2f position;
         sf::Vector2f velocity;
         float angle;
+        int dmg;
     };
 
 #pragma region Constructor
