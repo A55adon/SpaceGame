@@ -5,27 +5,27 @@
 class Background
 {
 public:
-#pragma region Constructor
-    Background(std::string path);
-#pragma endregion
+    struct Data
+    {
+        int x, y, w, h;
+        std::string path;
+        sf::Texture texture;
+        sf::Sprite sprite;
+    };
 
-#pragma region Methods
+    //////Constructors //////
+
+    Background(Data bgData, int parallaxFactor);
+
+    //////Methods//////
+
     void update(sf::Vector2f playerPosition);
     void draw(sf::RenderWindow &window);
-#pragma endregion
 
-private:
-#pragma region Variables
-    sf::Texture bgTexture;
-    sf::Sprite bgSprite;
-    sf::Sprite bgSpriteN;
-    sf::Sprite bgSpriteNR;
-    sf::Sprite bgSpriteR;
-    sf::Sprite bgSpriteRS;
-    sf::Sprite bgSpriteS;
-    sf::Sprite bgSpriteSL;
-    sf::Sprite bgSpriteL;
-    sf::Sprite bgSpriteLN;
-    int x = 0, y = 0;
-#pragma endregion
+    sf::Vector2f getPosition() const;
+
+    void setPosition(float x, float y);
+
+    Data bgData;
+    int parallaxFactor;
 };

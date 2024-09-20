@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "Background.h"
+#include "BackgroundLayer.h"
 #include "Enemy.h"
 #include <iostream>
 #include <memory>
@@ -102,8 +103,10 @@ int main()
     sf::Clock clock;
     sf::Time timePerFrame = sf::seconds(1.f / 120.f);
     sf::Time accumulator = sf::Time::Zero;
+    Background::Data bgData = {0, 0, 2000, 2000, "res/Background/All.png"};
 
-    Background background("res/Background/Space Background(11).png");
+    BackgroundLayer backgroundLayer(bgData, 3, 1200, 1000);
+
     sf::View view(window.getDefaultView());
     view.setCenter(player.getPosition());
 
@@ -122,7 +125,8 @@ int main()
         while (accumulator >= timePerFrame)
         {
             player.update();
-            background.update(player.getPosition());
+            backgroundLayer.update(player.getPosition());
+
             accumulator -= timePerFrame;
 
             for (auto &enemy : enemys)
@@ -153,12 +157,15 @@ int main()
         window.setView(view);
 
         window.clear(sf::Color::Black);
-        background.draw(window);
+
+        backgroundLayer.draw(window);
+
         player.draw();
         for (auto &enemy : enemys)
         {
             enemy.draw();
         }
+
         window.display();
     }
     return 0;
