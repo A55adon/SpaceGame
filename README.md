@@ -1,7 +1,5 @@
 # SpaceGame
 
-A simple space shooter
-
 todo:
 
 - normalize diagonal movement
@@ -15,3 +13,4 @@ todo:
 - powerups?
 - a menu
 - smoother movement
+- to be continued...
