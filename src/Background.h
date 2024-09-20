@@ -1,31 +1,23 @@
-#pragma once
+#ifndef BACKGROUND_H
+#define BACKGROUND_H
+
 #include <SFML/Graphics.hpp>
-#include <string>
+#include <vector>
+#include <memory>
 
 class Background
 {
 public:
-    struct Data
-    {
-        int x, y, w, h;
-        std::string path;
-        sf::Texture texture;
-        sf::Sprite sprite;
-    };
+    Background(sf::RenderWindow &window, const std::string &texturePath);
 
-    //////Constructors //////
-
-    Background(Data bgData, int parallaxFactor);
-
-    //////Methods//////
-
-    void update(sf::Vector2f playerPosition);
+    void update(const sf::Vector2f &playerPosition, float parallax);
     void draw(sf::RenderWindow &window);
 
-    sf::Vector2f getPosition() const;
-
-    void setPosition(float x, float y);
-
-    Data bgData;
-    int parallaxFactor;
+private:
+    sf::RenderWindow &window;
+    std::shared_ptr<sf::Texture> texture;
+    std::vector<sf::Sprite> sprites;
+    sf::Vector2f previousPlayerPosition;
 };
+
+#endif

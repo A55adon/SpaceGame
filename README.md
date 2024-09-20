@@ -4,11 +4,11 @@ A simple space shooter
 
 todo:
 
-- fix background
-- better background rendering
+- normalize diagonal movement
 - explode animations
+- playerhealth
 - ui
 - different enemys
+- fix hitboxes (shorten pngs)
 - a menu
 - smoother movement
-- paralaxing?

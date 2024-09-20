@@ -1,7 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "Background.h"
-#include "BackgroundLayer.h"
 #include "Enemy.h"
 #include <iostream>
 #include <memory>
@@ -10,8 +9,14 @@
 sf::RenderWindow window(sf::VideoMode(1200, 1000), "Space Game");
 Player::Data playerData = {"res/Ships/PNGs/ship.png", "res/Engine Effects/PNGs/Nairan - Battlecruiser - Engine.png", {400, 300}, {0, 0}, window};
 Player player(playerData);
+
 std::vector<Enemy> enemys;
 sf::Time dt;
+
+Background stars(window, "res/Background/stars.png");
+Background nebulae(window, "res/Background/nebulae.png");
+Background dust(window, "res/Background/dust.png");
+Background planets(window, "res/Background/planets.png");
 
 void enemyHandler()
 {
@@ -103,9 +108,6 @@ int main()
     sf::Clock clock;
     sf::Time timePerFrame = sf::seconds(1.f / 120.f);
     sf::Time accumulator = sf::Time::Zero;
-    Background::Data bgData = {0, 0, 2000, 2000, "res/Background/All.png"};
-
-    BackgroundLayer backgroundLayer(bgData, 3, 1200, 1000);
 
     sf::View view(window.getDefaultView());
     view.setCenter(player.getPosition());
@@ -125,7 +127,6 @@ int main()
         while (accumulator >= timePerFrame)
         {
             player.update();
-            backgroundLayer.update(player.getPosition());
 
             accumulator -= timePerFrame;
 
@@ -134,6 +135,10 @@ int main()
                 enemy.update(player.pData.position);
             }
             enemySpawner();
+            stars.update(player.pData.position, 0.0f);
+            nebulae.update(player.pData.position, 0.001f);
+            dust.update(player.pData.position, 0.005f);
+            planets.update(player.pData.position, 0.01f);
         }
 
         sf::Vector2f playerPosition = player.getPosition();
@@ -157,9 +162,10 @@ int main()
         window.setView(view);
 
         window.clear(sf::Color::Black);
-
-        backgroundLayer.draw(window);
-
+        stars.draw(window);
+        nebulae.draw(window);
+        dust.draw(window);
+        planets.draw(window);
         player.draw();
         for (auto &enemy : enemys)
         {
