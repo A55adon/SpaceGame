@@ -8,13 +8,14 @@
 #include "UI.h"
 #include "Button.h"
 
-UI ui;
 sf::RenderWindow window(sf::VideoMode(1200, 1000), "Space Game");
 Player::Data playerData = {"res/Ships/PNGs/ship.png", "res/Engine Effects/PNGs/Nairan - Battlecruiser - Engine.png", {400, 300}, {0, 0}, window};
 Player player(playerData);
 
 std::vector<Enemy> enemys;
 sf::Time dt;
+
+UI ui(window);
 
 Background stars(window, "res/Background/stars.png");
 Background nebulae(window, "res/Background/nebulae.png");
@@ -128,6 +129,7 @@ int main()
         }
 
         ui.update(window, event);
+
         if (ui.getUItrue())
         {
             window.clear(sf::Color::Black);

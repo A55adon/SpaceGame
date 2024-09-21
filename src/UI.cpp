@@ -1,19 +1,19 @@
 #include "UI.h"
+#include "Button.h"
 #include <iostream>
 
-UI::UI() : myButton(200.0f, 150.0f, 16.0f, 16.0f, buttonTexture, []()
-                    { std::cout << "Button clicked!" << std::endl; })
+UI::UI(sf::RenderWindow &window) : escapeKeyReleased(true), UItrue(false)
 {
-    if (!buttonTexture.loadFromFile("res/Buttons/info_button.png"))
+    if (!buttonTexture.loadFromFile("res/Ships/PNGs/enemy2.png"))
     {
         std::cout << "Failed to load button texture!" << std::endl;
     }
     else
     {
-        std::cout << "Button texture loaded successfully." << std::endl;
+        myButton = Button(0, 0, buttonTexture, []()
+                          { std::cout << "Button clicked!" << std::endl; });
     }
 }
-
 void UI::update(const sf::RenderWindow &window, const sf::Event &event)
 {
     myButton.update(window);

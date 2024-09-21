@@ -1,19 +1,23 @@
 #include "Button.h"
-#include <iostream> // For debug output
+#include <iostream>
 
-Button::Button(float x, float y, float width, float height, const sf::Texture &texture, std::function<void()> callback)
-    : onClick(callback), originalSize(width, height)
+Button::Button() : originalSize(100.0f, 50.0f) // Default size
 {
-    buttonShape.setSize(originalSize);
-    buttonShape.setPosition(x, y);
-    buttonShape.setTexture(&texture);
-    std::cout << "Button initialized at position (" << x << ", " << y << ") with size (" << width << ", " << height << ")" << std::endl; // Debug info
+}
+
+Button::Button(float x, float y, const sf::Texture &texture, std::function<void()> callback)
+    : onClick(callback), originalSize(16.0f, 16.0f) // Default size
+{
+    buttonSprite.setPosition(0, 0);
+    // buttonSprite.setPosition(x, y);
+    buttonSprite.setTexture(texture); // Set origin for scaling
+    buttonSprite.setScale(2, 2);      // Scale to original size
 }
 
 void Button::draw(sf::RenderWindow &window)
 {
-    std::cout << "Drawing button at position: " << buttonShape.getPosition().x << ", " << buttonShape.getPosition().y << std::endl;
-    window.draw(buttonShape);
+    buttonSprite.setPosition(-200, -200);
+    window.draw(buttonSprite);
 }
 
 void Button::handleEvent(const sf::Event &event, const sf::RenderWindow &window)
@@ -23,13 +27,11 @@ void Button::handleEvent(const sf::Event &event, const sf::RenderWindow &window)
         if (event.mouseButton.button == sf::Mouse::Left)
         {
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-            std::cout << "Mouse clicked at: " << mousePos.x << ", " << mousePos.y << std::endl;
-
-            if (buttonShape.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y)))
+            if (buttonSprite.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y)))
             {
                 isClicked = true;
-                std::cout << "Button clicked!" << std::endl;
-                onClick();
+                onClick(); // Call the callback function
+                std::cout << "Clicked" << std::endl;
             }
         }
     }
@@ -44,12 +46,16 @@ void Button::update(const sf::RenderWindow &window)
 {
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 
-    if (buttonShape.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y)))
+    // Print both button and mouse positions
+    std::cout << "Button position: (" << buttonSprite.getPosition().x << ", " << buttonSprite.getPosition().y << "), "
+              << "Mouse position: (" << mousePos.x << ", " << mousePos.y << ")" << std::endl;
+
+    if (buttonSprite.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y)))
     {
         if (!isHovered)
         {
             isHovered = true;
-            buttonShape.setSize(originalSize * 1.1f);
+            buttonSprite.setScale(1.1f, 1.1f); // Scale up when hovered
         }
     }
     else
@@ -57,16 +63,21 @@ void Button::update(const sf::RenderWindow &window)
         if (isHovered)
         {
             isHovered = false;
-            buttonShape.setSize(originalSize);
+            buttonSprite.setScale(1.0f, 1.0f); // Reset scale when not hovered
         }
     }
 
     if (isClicked)
     {
-        buttonShape.setSize(originalSize * 0.9f);
+        buttonSprite.setScale(0.9f, 0.9f); // Scale down when clicked
     }
     else if (!isHovered)
     {
-        buttonShape.setSize(originalSize);
+        buttonSprite.setScale(1.0f, 1.0f); // Reset scale
     }
+}
+
+void Button::setPosition(float x, float y)
+{
+    buttonSprite.setPosition(x, y);
 }
