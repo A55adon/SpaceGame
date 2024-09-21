@@ -16,7 +16,7 @@ Button::Button(float x, float y, const sf::Texture &texture, std::function<void(
 
 void Button::draw(sf::RenderWindow &window)
 {
-    buttonSprite.setPosition(-200, -200);
+
     window.draw(buttonSprite);
 }
 
