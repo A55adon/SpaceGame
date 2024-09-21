@@ -5,7 +5,10 @@
 #include <iostream>
 #include <memory>
 #include <cmath>
+#include "UI.h"
+#include "Button.h"
 
+UI ui;
 sf::RenderWindow window(sf::VideoMode(1200, 1000), "Space Game");
 Player::Data playerData = {"res/Ships/PNGs/ship.png", "res/Engine Effects/PNGs/Nairan - Battlecruiser - Engine.png", {400, 300}, {0, 0}, window};
 Player player(playerData);
@@ -124,52 +127,62 @@ int main()
                 window.close();
         }
 
-        while (accumulator >= timePerFrame)
+        ui.update(window, event);
+        if (ui.getUItrue())
         {
-            player.update();
+            window.clear(sf::Color::Black);
+            ui.draw(window);
+        }
+        else
+        {
+            window.clear(sf::Color::Black);
 
-            accumulator -= timePerFrame;
+            while (accumulator >= timePerFrame)
+            {
+                player.update();
 
+                accumulator -= timePerFrame;
+
+                for (auto &enemy : enemys)
+                {
+                    enemy.update(player.pData.position);
+                }
+                enemySpawner();
+                stars.update(player.pData.position, 0.0f);
+                nebulae.update(player.pData.position, 0.001f);
+                dust.update(player.pData.position, 0.005f);
+                planets.update(player.pData.position, 0.01f);
+            }
+
+            sf::Vector2f playerPosition = player.getPosition();
+            sf::Vector2f viewCenter = view.getCenter();
+
+            sf::Vector2f distance = player.pData.position - viewCenter;
+            float distanceLength = std::sqrt(distance.x * distance.x + distance.y * distance.y);
+
+            float speedFactor = 1.2f;
+            float followSpeed = distanceLength * speedFactor;
+
+            if (distanceLength > 1.0f)
+            {
+                sf::Vector2f direction = distance / distanceLength;
+                viewCenter += direction * followSpeed * dt.asSeconds();
+                view.setCenter(viewCenter);
+            }
+
+            bulletHandler();
+            enemyHandler();
+            window.setView(view);
+
+            stars.draw(window);
+            nebulae.draw(window);
+            dust.draw(window);
+            planets.draw(window);
+            player.draw();
             for (auto &enemy : enemys)
             {
-                enemy.update(player.pData.position);
+                enemy.draw();
             }
-            enemySpawner();
-            stars.update(player.pData.position, 0.0f);
-            nebulae.update(player.pData.position, 0.001f);
-            dust.update(player.pData.position, 0.005f);
-            planets.update(player.pData.position, 0.01f);
-        }
-
-        sf::Vector2f playerPosition = player.getPosition();
-        sf::Vector2f viewCenter = view.getCenter();
-
-        sf::Vector2f distance = player.pData.position - viewCenter;
-        float distanceLength = std::sqrt(distance.x * distance.x + distance.y * distance.y);
-
-        float speedFactor = 1.2f;
-        float followSpeed = distanceLength * speedFactor;
-
-        if (distanceLength > 1.0f)
-        {
-            sf::Vector2f direction = distance / distanceLength;
-            viewCenter += direction * followSpeed * dt.asSeconds();
-            view.setCenter(viewCenter);
-        }
-
-        bulletHandler();
-        enemyHandler();
-        window.setView(view);
-
-        window.clear(sf::Color::Black);
-        stars.draw(window);
-        nebulae.draw(window);
-        dust.draw(window);
-        planets.draw(window);
-        player.draw();
-        for (auto &enemy : enemys)
-        {
-            enemy.draw();
         }
 
         window.display();
