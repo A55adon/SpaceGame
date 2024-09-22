@@ -2,23 +2,17 @@
 #include "Button.h"
 #include <iostream>
 
-UI::UI(sf::RenderWindow &window) : escapeKeyReleased(true), UItrue(false)
+UI::UI(sf::RenderWindow &window)
 {
-    if (!buttonTexture.loadFromFile("res/Ships/PNGs/enemy2.png"))
-    {
-        std::cout << "Failed to load button texture!" << std::endl;
-    }
-    else
-    {
-        myButton = Button(0, 0, buttonTexture, []()
-                          { std::cout << "Button clicked!" << std::endl; });
-    }
+    testButton = new Button(0.0f, 0.0f, 1.0f, 1.0f, "res/Ships/PNGs/ship.png",
+                            []()
+                            {
+                                std::cout << "Button clicked!" << std::endl;
+                            });
 }
+
 void UI::update(const sf::RenderWindow &window, const sf::Event &event)
 {
-    myButton.update(window);
-    myButton.handleEvent(event, window);
-
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && escapeKeyReleased)
     {
         UItrue = !UItrue;
@@ -29,14 +23,22 @@ void UI::update(const sf::RenderWindow &window, const sf::Event &event)
     {
         escapeKeyReleased = true;
     }
+
+    if (UItrue)
+    {
+        testButton->handleEvent(event, window);
+    }
+}
+
+void UI::draw(sf::RenderWindow &window)
+{
+    if (UItrue)
+    {
+        testButton->draw(window);
+    }
 }
 
 bool UI::getUItrue()
 {
     return UItrue;
-}
-
-void UI::draw(sf::RenderWindow &window)
-{
-    myButton.draw(window);
 }

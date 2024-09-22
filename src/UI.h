@@ -5,14 +5,13 @@
 class UI
 {
 public:
-    UI(sf::RenderWindow &window); // Updated constructor
+    UI(sf::RenderWindow &window);
     void update(const sf::RenderWindow &window, const sf::Event &event);
     bool getUItrue();
     void draw(sf::RenderWindow &window);
-    void setButtonPosition(float x, float y);
 
-    bool UItrue;
-    bool escapeKeyReleased;
-    sf::Texture buttonTexture;
-    Button myButton;
+private:
+    bool UItrue = false;
+    bool escapeKeyReleased = true;
+    Button *testButton;
 };
