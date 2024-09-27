@@ -13,5 +13,6 @@ public:
 private:
     bool UItrue = false;
     bool escapeKeyReleased = true;
-    Button *testButton;
+    Button *exitButton;
+    Button *continueButton;
 };

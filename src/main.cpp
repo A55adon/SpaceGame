@@ -63,7 +63,7 @@ void enemyHandler()
 }
 void enemySpawner()
 {
-    if (enemys.size() < 80)
+    if (enemys.size() < 40)
     {
         sf::Vector2f playerPosition = player.getPosition();
         float angle = static_cast<float>(rand()) / RAND_MAX * 2 * 3.14159f;
@@ -114,6 +114,8 @@ int main()
     sf::Time accumulator = sf::Time::Zero;
 
     sf::View view(window.getDefaultView());
+    sf::View uiView(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
+
     view.setCenter(player.getPosition());
 
     while (window.isOpen())
@@ -133,16 +135,17 @@ int main()
         if (ui.getUItrue())
         {
             window.clear(sf::Color::Black);
+            window.setView(uiView); // Set the view to the UI view
             ui.draw(window);
         }
         else
         {
             window.clear(sf::Color::Black);
+            window.setView(view); // Use the main view for game elements
 
             while (accumulator >= timePerFrame)
             {
                 player.update();
-
                 accumulator -= timePerFrame;
 
                 for (auto &enemy : enemys)

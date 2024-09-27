@@ -123,7 +123,7 @@ void Player::update()
     }
 
     // Bullet shooting logic
-    if (shootable > 10)
+    if (shootable > 15)
     {
         shootable = 0;
     }
@@ -150,7 +150,7 @@ void Player::shoot()
         bData.dmg = 8;
         bData.angle = (shipSprite.getRotation() - 90) * 3.14159f / 180.0f;
         bData.position = spawnPosition;
-        float bulletSpeed = 2.0f;
+        float bulletSpeed = 4.0f;
         bData.velocity = sf::Vector2f(std::cos(bData.angle) * bulletSpeed,
                                       std::sin(bData.angle) * bulletSpeed);
 

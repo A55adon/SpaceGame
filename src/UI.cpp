@@ -4,11 +4,17 @@
 
 UI::UI(sf::RenderWindow &window)
 {
-    testButton = new Button(0.0f, 0.0f, 1.0f, 1.0f, "res/Ships/PNGs/ship.png",
+    exitButton = new Button(0.0f, 0.0f, 1.0f, 1.0f, "res/Buttons/exit.png",
                             []()
                             {
-                                std::cout << "Button clicked!" << std::endl;
+                                delete main;
                             });
+
+    continueButton = new Button(40.0f, 40.0f, 2.0f, 2.0f, "res/Buttons/continue.png",
+                                []()
+                                {
+                                    UItrue = false;
+                                });
 }
 
 void UI::update(const sf::RenderWindow &window, const sf::Event &event)
@@ -26,7 +32,8 @@ void UI::update(const sf::RenderWindow &window, const sf::Event &event)
 
     if (UItrue)
     {
-        testButton->handleEvent(event, window);
+        exitButton->handleEvent(event, window);
+        continueButton->handleEvent(event, window);
     }
 }
 
@@ -34,7 +41,8 @@ void UI::draw(sf::RenderWindow &window)
 {
     if (UItrue)
     {
-        testButton->draw(window);
+        exitButton->draw(window);
+        continueButton->draw(window);
     }
 }
 
