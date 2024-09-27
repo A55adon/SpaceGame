@@ -9,7 +9,7 @@ Button::Button(float x, float y, float wf, float hf, std::string path, std::func
         std::cerr << "Error loading tilesheet from " << path << std::endl;
     }
     buttonSprite.setTexture(buttonTexture);
-    buttonSprite.setPosition(0, 0);
+    buttonSprite.setPosition(x, y);
     buttonSprite.setScale(wf, hf);
 }
 

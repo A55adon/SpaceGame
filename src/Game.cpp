@@ -7,22 +7,27 @@
 #include <cmath>
 #include "UI.h"
 #include "Button.h"
+#include "Game.h"
 
-sf::RenderWindow window(sf::VideoMode(1200, 1000), "Space Game");
-Player::Data playerData = {"res/Ships/PNGs/ship.png", "res/Engine Effects/PNGs/Nairan - Battlecruiser - Engine.png", {400, 300}, {0, 0}, window};
-Player player(playerData);
+// Define the static members here
 
-std::vector<Enemy> enemys;
-sf::Time dt;
+sf::RenderWindow Game::window(sf::VideoMode(1200, 1000), "Space Game", sf::Style::Fullscreen);
+Player::Data playerData = {"res/Ships/PNGs/ship.png", "res/Engine Effects/PNGs/Nairan - Battlecruiser - Engine.png", {400, 300}, {0, 0}, Game::window};
+Player Game::player(playerData);
 
-UI ui(window);
+std::vector<Enemy> Game::enemys; // Correctly define the static member
+sf::Time Game::dt;               // Correctly define the static member
 
-Background stars(window, "res/Background/stars.png");
-Background nebulae(window, "res/Background/nebulae.png");
-Background dust(window, "res/Background/dust.png");
-Background planets(window, "res/Background/planets.png");
+UI Game::ui(Game::window);
 
-void enemyHandler()
+Background Game::stars(Game::window, "res/Background/stars.png");
+Background Game::nebulae(Game::window, "res/Background/nebulae.png");
+Background Game::dust(Game::window, "res/Background/dust.png");
+Background Game::planets(Game::window, "res/Background/planets.png");
+
+Game::Game() {}
+
+void Game::enemyHandler()
 {
     for (size_t i = 0; i < enemys.size();)
     {
@@ -61,7 +66,7 @@ void enemyHandler()
         }
     }
 }
-void enemySpawner()
+void Game::enemySpawner()
 {
     if (enemys.size() < 40)
     {
@@ -81,7 +86,7 @@ void enemySpawner()
         enemys.push_back(Enemy(enemyData));
     }
 }
-void bulletHandler()
+void Game::bulletHandler()
 {
     auto it = std::remove_if(player.bullets.begin(), player.bullets.end(), [&](const Bullet &bullet)
                              {
@@ -107,7 +112,7 @@ void bulletHandler()
     }
 }
 
-int run()
+int Game::run()
 {
     sf::Clock clock;
     sf::Time timePerFrame = sf::seconds(1.f / 120.f);
