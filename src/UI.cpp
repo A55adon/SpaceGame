@@ -20,6 +20,10 @@ UI::UI(sf::RenderWindow &window)
               << exitButton->buttonSprite.getPosition().y << std::endl;
     std::cout << continueButton->buttonSprite.getPosition().x << " + "
               << continueButton->buttonSprite.getPosition().y << std::endl;
+
+    uiBackgroundTexture.loadFromFile("res/Other/gray.png");
+    uiBackgroundSprite.setTexture(uiBackgroundTexture);
+    uiBackgroundSprite.setPosition(0.0f, 0.0f);
 }
 
 void UI::update(const sf::RenderWindow &window, const sf::Event &event)
@@ -48,6 +52,7 @@ void UI::draw(sf::RenderWindow &window)
     {
         exitButton->draw(window);
         continueButton->draw(window);
+        window.draw(uiBackgroundSprite);
     }
 }
 

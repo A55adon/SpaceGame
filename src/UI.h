@@ -17,6 +17,8 @@ private:
     bool escapeKeyReleased = true;
     Button *exitButton;
     Button *continueButton;
+    sf::Sprite uiBackgroundSprite;
+    sf::Texture uiBackgroundTexture;
 };
 
 #endif // UI_H

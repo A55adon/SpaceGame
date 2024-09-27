@@ -139,14 +139,22 @@ int Game::run()
 
         if (ui.getUItrue())
         {
-            window.clear(sf::Color::Black);
-            window.setView(uiView); // Set the view to the UI view
+            stars.draw(window);
+            nebulae.draw(window);
+            dust.draw(window);
+            planets.draw(window);
+            player.draw();
+            for (auto &enemy : enemys)
+            {
+                enemy.draw();
+            }
+            window.setView(uiView);
             ui.draw(window);
         }
         else
         {
             window.clear(sf::Color::Black);
-            window.setView(view); // Use the main view for game elements
+            window.setView(view);
 
             while (accumulator >= timePerFrame)
             {
